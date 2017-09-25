@@ -161,6 +161,7 @@ public:
   void initRotationDelta( ){
     rotationDelta = 0.05;
   }
+    
    
   void initLights( ){
     glm::vec3 color0(1.0, 0.0, 0.0);
@@ -207,6 +208,51 @@ public:
     glm::mat3 m = glm::rotate(rotationDelta, s);
     upVector = m * u;
     eyePosition = m * eyePosition;
+  }
+  void cameraForward(){//'O'
+      
+      //direction cam facing head-tail * speed
+      //glm::vec3 nDirectionV3 = glm::normalize(eyePosition - centerPosition);//GAZE VECTOR
+      //glm::vec3 transV3 = nDirectionV3*glm::vec3(0.0f, 0.0f, 0.05f);
+      glm::mat4 transM4 = glm::translate(glm::vec3(0.0f, 0.0f, -0.05f));//transV3);//create translation mat
+      glm::vec4 eyePosV4 = glm::vec4(eyePosition.x, eyePosition.y, eyePosition.z, 1.0);
+      glm::vec4 eyeV4 = transM4 * eyePosV4;
+      glm::vec3 eyeV3 = glm::vec3(eyeV4.x, eyeV4.y, eyeV4.z);
+      eyePosition = eyeV3;
+      
+  }
+    
+  void cameraBackward(){//'L'
+      
+      //direction cam facing head-tail * speed
+      //glm::vec3 nDirectionV3 = glm::normalize(centerPosition - eyePosition); //GAZE VECTOR
+      //glm::vec3 transV3 = nDirectionV3*glm::vec3(0.0f, 0.0f, 0.05f);
+      glm::mat4 transM4 = glm::translate(glm::vec3(0.0f, 0.0f, 0.05f));//transV3);//create translation mat
+      glm::vec4 eyePosV4 = glm::vec4(eyePosition.x, eyePosition.y, eyePosition.z, 1.0);
+      glm::vec4 eyeV4 = transM4 * eyePosV4;
+      glm::vec3 eyeV3 = glm::vec3(eyeV4.x, eyeV4.y, eyeV4.z);
+      eyePosition = eyeV3;
+        
+  }
+
+  void cameraPanLeft(){//'K'
+      
+      glm::mat4 transM4 = glm::translate(glm::vec3(-0.05f, 0.0f, 0.0f));//create translation mat
+      glm::vec4 centerPosV4 = glm::vec4(centerPosition.x, centerPosition.y, centerPosition.z, 1.0);
+      glm::vec4 newCenterV4 = transM4 * centerPosV4;
+      glm::vec3 newCenterV3 = glm::vec3(newCenterV4.x, newCenterV4.y, newCenterV4.z);
+      centerPosition = newCenterV3;
+      
+  }
+  
+  void cameraPanRight(){//';'
+      
+      glm::mat4 transM4 = glm::translate(glm::vec3(0.05f, 0.0f, 0.0f));//create translation mat
+      glm::vec4 centerPosV4 = glm::vec4(centerPosition.x, centerPosition.y, centerPosition.z, 1.0);
+      glm::vec4 newCenterV4 = transM4 * centerPosV4;
+      glm::vec3 newCenterV3 = glm::vec3(newCenterV4.x, newCenterV4.y, newCenterV4.z);
+      centerPosition = newCenterV3;
+        
   }
 
 
@@ -303,6 +349,7 @@ public:
     }else if(isKeyPressed(GLFW_KEY_MINUS)){
 
     }else if(isKeyPressed('R')){
+      initCenterPosition( );//reset camera pan position
       initEyePosition( );
       initUpVector( );
       initRotationDelta( );
@@ -340,6 +387,15 @@ public:
       light0.toggle( );
     }else if(isKeyPressed('2')){
       light1.toggle( );
+    }else if(isKeyPressed('O')){
+      cameraForward();
+    }else if(isKeyPressed('L')){
+      cameraBackward();
+    }else if(isKeyPressed('K')){
+      cameraPanLeft();
+    }else if(isKeyPressed(';')){
+      cameraPanRight();
+        //std::cout << ";"<< std::endl;
     }
     return !msglError( );
   }
